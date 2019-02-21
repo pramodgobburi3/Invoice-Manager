@@ -1,0 +1,211 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Invoice - srtdash</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/png" href="assets/images/icon/favicon.ico">
+   {% include 'components/header_dependencies.html' %}
+
+</head>
+
+<body>
+    <!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+    <!-- preloader area start -->
+    {% include 'components/navbar.html' %}
+
+            <!-- page title area end -->
+            <div class="main-content-inner">
+
+                <div class="row">
+                    <div class="col-lg-12 mt-5">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="invoice-area">
+                                    <div class="invoice-head">
+                                        <div class="row">
+                                            <div class="iv-left col-6">
+                                                <span>INVOICE</span>
+                                            </div>
+                                            <div class="iv-right col-6 text-md-right">
+                                                <span>#34445998</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row align-items-center">
+                                        <div class="col-md-6">
+                                            <div class="invoice-address">
+                                                <h3>invoiced to</h3>
+                                                <h5>Verdie Hintz</h5>
+                                                <p>4494 Weekley Street, San Antonio, 78205 Texas</p>
+                                                <p>San Antonio</p>
+                                                <p>Somalia</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 text-md-right">
+                                            <ul class="invoice-date">
+                                                <li>Invoice Date : sat 18 | 07 | 2018</li>
+                                                <li>Due Date : sat 18 | 07 | 2018</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="invoice-table table-responsive mt-5">
+                                        <table class="table table-bordered table-hover text-right">
+                                            <thead>
+                                                <tr class="text-capitalize">
+                                                    <th class="text-center" style="width: 5%;">Price</th>
+                                                    <th class="text-left" style="width: 45%; min-width: 130px;">Description</th>
+                                                    <th>qty</th>
+                                                    <th style="min-width: 100px">Unit Cost</th>
+                                                    <th>total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbody">
+                                                <tr id="add" style="cursor: pointer; outline: thin solid; outline-style: dashed">
+                                                    <td class="text-center"><strong><i class="ti-plus"></i></strong></td>
+                                                    <td class="text-left"><strong>Add Item</strong></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td colspan="4">total balance :</td>
+                                                    <td>$140</td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="invoice-buttons text-right">
+                                    <a href="#" class="invoice-btn">print invoice</a>
+                                    <a href="#" class="invoice-btn">send invoice</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+    <div id="addItem" class="modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Add Item</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+              <div class="search-box">
+                  <form>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1"><i class="ti-search"></i>Search Item / Service</label>
+                        <br>
+                        <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
+                    </div>
+                </form>
+              </div>
+              <ul class="list-group overflow-auto" style="max-height: 500px;overflow:scroll; -webkit-overflow-scrolling: touch;" id="myDropdown">
+                  {% for item in items %}
+                    <a class="list-group-item list-group-item-action" id="{{ item.id }}" onclick="addItem({{ item.id }})" style="cursor: pointer">
+                        {{ item.name }} - {{ item.description }}
+                      </a>
+                  {% endfor %}
+
+                </ul>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn" style="background-color: #815ef6; color: white;">Save changes</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+        <!-- main content area end -->
+    <!-- jquery latest version -->
+    {% include 'components/footer_dependencies.html' %}
+
+</body>
+
+</html>
+
+<script>
+    var items = [];
+    var modalIds = [];
+
+
+    $(document).ready(function () {
+        $("#add").click(function (e) {
+            $("#addItem").modal('show');
+            {#$("#tbody").append('<tr> <td class="text-center">2</td> <td class="text-left">Beautiful flowers</td> <td>2</td> <td>$50</td> <td>$100</td> </tr>')#}
+        })
+    });
+
+    function saveItems() {
+        var itemId = modalIds[0];
+
+        {% for item in items %}
+            {% if item.id == itemId %}
+                items.push(item);
+            {% endif %}
+        {% endfor %}
+    }
+
+
+
+    function filterFunction() {
+      var input, filter, ul, li, a, i;
+      input = document.getElementById("myInput");
+      filter = input.value.toUpperCase();
+      div = document.getElementById("myDropdown");
+      a = div.getElementsByTagName("a");
+      for (i = 0; i < a.length; i++) {
+        txtValue = a[i].textContent || a[i].innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          a[i].style.display = "";
+        } else {
+          a[i].style.display = "none";
+        }
+      }
+    }
+
+    function addItem(id) {
+        console.log(id);
+
+        var a = document.getElementsByTagName("a");
+
+        for(var i=0; i < a.length; i++) {
+            if(a[i].id != id) {
+                if(a[i].classList.contains("active")) {
+                    a[i].classList.remove("active");
+                    var index = modalIds.indexOf(id);
+                    modalIds.splice(index, 1);
+                }
+            }
+            else {
+               if(modalIds.includes(id)) {
+                    element = document.getElementById(id);
+                    console.log(element.textContent);
+                    element.classList.remove("active");
+                    var index = modalIds.indexOf(id);
+                    modalIds.splice(index, 1);
+                }
+                else {
+                    element = document.getElementById(id);
+                    console.log(element.textContent);
+                    element.classList.add("active");
+                    modalIds.push(id);
+                }
+
+            }
+        }
+
+    }
+</script>
